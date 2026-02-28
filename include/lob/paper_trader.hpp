@@ -5,7 +5,15 @@
 
 namespace lob {
 
+enum class EventType {
+    LIMIT,   // New limit order
+    CANCEL,  // Cancel existing order
+    MODIFY   // Modify existing order (price/quantity)
+};
+
 struct HistoricalEvent {
+    EventId id;             // unique identifier for event
+    EventType type;         // LIMIT, CANCEL, MODIFY
     OrderId id;
     Side side;
     Price price;

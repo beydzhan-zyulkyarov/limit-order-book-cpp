@@ -10,20 +10,51 @@ PaperTradingEngine::PaperTradingEngine(std::size_t pool_size)
 void PaperTradingEngine::feed_events(const std::vector<HistoricalEvent>& events)
 {
     for (const auto& e : events) {
-        // Allocate order
-        auto* o = engine_.book().pool().allocate();
-        o->id = e.id;
-        o->side = e.side;
-        o->price = e.price;
-        o->qty = e.qty;
-        o->remaining = e.qty;
-        o->ts = e.ts;
+        switch (e.type) {
+        case EventType::LIMIT: {
+            auto* o = engine_.book().pool().allocate();
+            o->id = e.id;
+            o->side = e.side;
+            o->price = e.price;
+            o->qty = e.qty;
+            o->remaining = e.qty;
+            o->ts = e.ts;
 
-        // Execute matching
-        auto event_trades = engine_.match_limit_order(o);
-        trades_.insert(trades_.end(), event_trades.begin(), event_trades.end());
+            auto event_trades = engine_.match_limit_order(o);
+            trades_.insert(trades_.end(), event_trades.begin(), event_trades.end());
+            break;
+        }
+        case EventType::CANCEL: {
+            auto& idx = engine_.book().order_index();
+            auto it = idx.find(e.id);
+            if (it != idx.end()) {
+                Order* o = it->second;
+                engine_.book().remove_from_level(o);
+                engine_.book().pool().deallocate(o);
+            }
+            break;
+        }
+        case EventType::MODIFY: {
+            auto& idx = engine_.book().order_index();
+            auto it = idx.find(e.id);
+            if (it != idx.end()) {
+                Order* o = it->second;
+                // Remove from old level
+                engine_.book().remove_from_level(o);
+                // Apply modification
+                o->price = e.price;
+                o->qty = e.qty;
+                o->remaining = e.qty;
+                o->ts = e.ts;
+                // Re-insert into book
+                auto event_trades = engine_.match_limit_order(o);
+                trades_.insert(trades_.end(), event_trades.begin(), event_trades.end());
+            }
+            break;
+        }
+        }
 
-        // Capture analytics
+        // Capture analytics after each event
         capture_snapshot(e.ts);
     }
 }

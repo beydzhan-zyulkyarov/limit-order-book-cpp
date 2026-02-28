@@ -5,9 +5,10 @@ using namespace lob;
 
 int main() {
     std::vector<HistoricalEvent> events = {
-        {1, Side::Buy, 100, 10, 1},
-        {2, Side::Sell, 101, 5, 2},
-        {3, Side::Buy, 102, 7, 3}
+        {1, EventType::LIMIT, 1, Side::Buy, 100, 10, 1},      // New buy order
+        {2, EventType::LIMIT, 2, Side::Sell, 101, 5, 2},      // New sell order
+        {3, EventType::MODIFY, 1, Side::Buy, 102, 12, 3},     // Modify order 1
+        {4, EventType::CANCEL, 2, Side::Sell, 0, 0, 4}       // Cancel order 2
     };
 
     PaperTradingEngine paper(1024);
