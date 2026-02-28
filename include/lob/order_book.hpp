@@ -29,6 +29,21 @@ public:
 
     std::size_t size() const noexcept;
 
+    auto& bids() noexcept { return bids_; }
+    auto& asks() noexcept { return asks_; }
+
+    const auto& bids() const noexcept { return bids_; }
+    const auto& asks() const noexcept { return asks_; }
+
+    OrderPool& pool() noexcept { return pool_; }
+    const OrderPool& pool() const noexcept { return pool_; }
+
+    void remove_from_level(Order* order);
+    void insert_into_level(Order* order);
+
+    auto& order_index() noexcept { return order_index_; }
+    const auto& order_index() const noexcept { return order_index_; }
+
 private:
     using BidLevels = std::map<Price, PriceLevel, std::greater<>>;
     using AskLevels = std::map<Price, PriceLevel, std::less<>>;
@@ -39,9 +54,6 @@ private:
     std::unordered_map<OrderId, Order*> order_index_;
 
     OrderPool pool_;
-
-    void insert_into_level(Order* order);
-    void remove_from_level(Order* order);
 };
 
 } // namespace lob
