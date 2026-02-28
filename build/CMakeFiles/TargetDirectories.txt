@@ -1,2 +1,0 @@
-/home/beycan/Projects/limit-order-book-cpp/build/CMakeFiles/edit_cache.dir
-/home/beycan/Projects/limit-order-book-cpp/build/CMakeFiles/rebuild_cache.dir
