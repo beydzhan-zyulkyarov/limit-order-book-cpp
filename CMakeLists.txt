@@ -88,6 +88,11 @@ add_executable(test_perf_metrics tests/test_perf_metrics.cpp)
 target_link_libraries(test_perf_metrics PRIVATE lob_core Catch2::Catch2WithMain)
 add_test(NAME perf_metrics COMMAND test_perf_metrics)
 
+# Strategy Callback test
+add_executable(test_strategy_callback tests/test_strategy_callback.cpp)
+target_link_libraries(test_strategy_callback PRIVATE lob_core Catch2::Catch2WithMain)
+add_test(NAME strategy_callback COMMAND test_strategy_callback)
+
 include(CTest)
 include(Catch)
 

@@ -63,6 +63,25 @@ bool OrderBook::cancel_order(OrderId id)
     return true;
 }
 
+bool OrderBook::modify_order(OrderId id, Price new_price, Quantity new_qty) {
+    auto it = order_index_.find(id);
+    if (it == order_index_.end()) return false;
+
+    Order* order = it->second;
+
+    // Remove from current level
+    remove_from_level(order);
+
+    // Update order
+    order->price = new_price;
+    order->qty = new_qty;
+    order->remaining = new_qty;
+
+    // Insert back into new level
+    insert_into_level(order);
+    return true;
+}
+
 const PriceLevel* OrderBook::best_bid() const
 {
     if (bids_.empty())

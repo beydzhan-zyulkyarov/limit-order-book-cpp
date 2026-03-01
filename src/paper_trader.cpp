@@ -3,10 +3,6 @@
 
 namespace lob {
 
-PaperTradingEngine::PaperTradingEngine(std::size_t pool_size)
-    : engine_(pool_size)
-{}
-
 void PaperTradingEngine::feed_events(const std::vector<HistoricalEvent>& events)
 {
     for (const auto& e : events) {

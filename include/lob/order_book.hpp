@@ -23,6 +23,7 @@ public:
     );
 
     bool cancel_order(OrderId id);
+    bool modify_order(OrderId id, Price new_price, Quantity new_qty);
 
     const PriceLevel* best_bid() const;
     const PriceLevel* best_ask() const;
