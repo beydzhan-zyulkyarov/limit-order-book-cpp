@@ -26,8 +26,6 @@ TEST_CASE("MatchingEngine performance metrics", "[perf]") {
         order->remaining = order->qty;
         order->ts        = i;
 
-        std::cout << i << std::endl;
-
         // Measure latency of match
         auto start = std::chrono::high_resolution_clock::now();
         auto trades = engine.match_limit_order(order);
