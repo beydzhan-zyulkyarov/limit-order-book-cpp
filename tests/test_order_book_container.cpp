@@ -43,6 +43,7 @@ TEST_CASE("Cancel middle order preserves links", "[orderbook]") {
 
     auto* o1 = book.add_limit_order_no_match(1, Side::Buy, 100, 10, 1);
     auto* o2 = book.add_limit_order_no_match(2, Side::Buy, 100, 20, 2);
+    (void)o2;
     auto* o3 = book.add_limit_order_no_match(3, Side::Buy, 100, 30, 3);
 
     REQUIRE(book.cancel_order(2) == true);
@@ -63,6 +64,7 @@ TEST_CASE("Cancel head order", "[orderbook]") {
     OrderBook book(1024);
 
     auto* o1 = book.add_limit_order_no_match(1, Side::Buy, 100, 10, 1);
+    (void)o1;
     auto* o2 = book.add_limit_order_no_match(2, Side::Buy, 100, 20, 2);
 
     REQUIRE(book.cancel_order(1) == true);
@@ -78,6 +80,7 @@ TEST_CASE("Cancel tail order", "[orderbook]") {
 
     auto* o1 = book.add_limit_order_no_match(1, Side::Buy, 100, 10, 1);
     auto* o2 = book.add_limit_order_no_match(2, Side::Buy, 100, 20, 2);
+    (void)o2;
 
     REQUIRE(book.cancel_order(2) == true);
 

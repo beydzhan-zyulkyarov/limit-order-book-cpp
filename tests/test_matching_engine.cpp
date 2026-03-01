@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include "lob/matching_engine.hpp"
+#include <iostream>
 
 using namespace lob;
 
@@ -7,6 +8,8 @@ TEST_CASE("Single cross") {
     MatchingEngine engine(1024);
 
     auto* resting = engine.book().add_limit_order_no_match(1, Side::Sell, 100, 10, 1);
+    (void)resting;
+
     auto* incoming = engine.book().pool().allocate();
     incoming->id = 2;
     incoming->side = Side::Buy;

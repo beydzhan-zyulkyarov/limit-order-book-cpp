@@ -39,6 +39,8 @@ target_compile_options(project_warnings INTERFACE
 # ----------------------------
 add_library(lob_core
     src/order_book.cpp
+    src/matching_engine.cpp
+    src/paper_trader.cpp
 )
 
 target_include_directories(lob_core
@@ -66,19 +68,23 @@ FetchContent_MakeAvailable(Catch2)
 
 enable_testing()
 
-add_executable(orderbook_tests
-    tests/test_order_book_container.cpp
-)
+# Order Book test
+add_executable(test_order_book_container tests/test_order_book_container.cpp)
+target_link_libraries(test_order_book_container PRIVATE lob_core Catch2::Catch2WithMain)
+add_test(NAME order_book_container COMMAND test_order_book_container)
 
-target_link_libraries(orderbook_tests
-    PRIVATE
-    lob_core
-    Catch2::Catch2WithMain
-)
+# Matching Engine test
+add_executable(test_matching_engine tests/test_matching_engine.cpp)
+target_link_libraries(test_matching_engine PRIVATE lob_core Catch2::Catch2WithMain)
+add_test(NAME matching_engine COMMAND test_matching_engine)
+
+# Paper Trader test
+add_executable(test_paper_trader tests/test_paper_trader.cpp)
+target_link_libraries(test_paper_trader PRIVATE lob_core Catch2::Catch2WithMain)
+add_test(NAME paper_trader COMMAND test_paper_trader)
 
 include(CTest)
 include(Catch)
-catch_discover_tests(orderbook_tests)
 
 # ----------------------------
 # Optional: Install Rules (professional touch)

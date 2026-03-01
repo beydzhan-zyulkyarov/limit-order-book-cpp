@@ -13,7 +13,7 @@ void PaperTradingEngine::feed_events(const std::vector<HistoricalEvent>& events)
         switch (e.type) {
         case EventType::LIMIT: {
             auto* o = engine_.book().pool().allocate();
-            o->id = e.id;
+            o->id = e.order_id;
             o->side = e.side;
             o->price = e.price;
             o->qty = e.qty;
@@ -26,7 +26,7 @@ void PaperTradingEngine::feed_events(const std::vector<HistoricalEvent>& events)
         }
         case EventType::CANCEL: {
             auto& idx = engine_.book().order_index();
-            auto it = idx.find(e.id);
+            auto it = idx.find(e.order_id);
             if (it != idx.end()) {
                 Order* o = it->second;
                 engine_.book().remove_from_level(o);
@@ -36,7 +36,7 @@ void PaperTradingEngine::feed_events(const std::vector<HistoricalEvent>& events)
         }
         case EventType::MODIFY: {
             auto& idx = engine_.book().order_index();
-            auto it = idx.find(e.id);
+            auto it = idx.find(e.order_id);
             if (it != idx.end()) {
                 Order* o = it->second;
                 // Remove from old level

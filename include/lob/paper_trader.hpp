@@ -14,7 +14,7 @@ enum class EventType {
 struct HistoricalEvent {
     EventId id;             // unique identifier for event
     EventType type;         // LIMIT, CANCEL, MODIFY
-    OrderId id;
+    OrderId order_id;
     Side side;
     Price price;
     Quantity qty;

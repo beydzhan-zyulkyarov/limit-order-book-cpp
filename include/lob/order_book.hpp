@@ -29,11 +29,14 @@ public:
 
     std::size_t size() const noexcept;
 
-    auto& bids() noexcept { return bids_; }
+    /*auto& bids() noexcept { return bids_; }
     auto& asks() noexcept { return asks_; }
 
     const auto& bids() const noexcept { return bids_; }
-    const auto& asks() const noexcept { return asks_; }
+    const auto& asks() const noexcept { return asks_; }*/
+
+    std::map<Price, PriceLevel>& asks() { return asks_; }
+    std::map<Price, PriceLevel>& bids() { return bids_; }
 
     OrderPool& pool() noexcept { return pool_; }
     const OrderPool& pool() const noexcept { return pool_; }
@@ -45,8 +48,8 @@ public:
     const auto& order_index() const noexcept { return order_index_; }
 
 private:
-    using BidLevels = std::map<Price, PriceLevel, std::greater<>>;
-    using AskLevels = std::map<Price, PriceLevel, std::less<>>;
+    using AskLevels = std::map<Price, PriceLevel, std::less<Price>>;
+    using BidLevels = std::map<Price, PriceLevel, std::less<Price>>;
 
     BidLevels bids_;
     AskLevels asks_;

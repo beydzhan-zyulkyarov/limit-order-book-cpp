@@ -4,9 +4,9 @@
 #include "order.hpp"
 
 struct PriceLevel {
-    Price price;
-    Quantity total_volume;
-
-    Order* head;
-    Order* tail;
+    Price price{};
+    Quantity total_volume{0};
+    
+    Order* head{nullptr};
+    Order* tail{nullptr};
 };
