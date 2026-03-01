@@ -83,6 +83,11 @@ add_executable(test_paper_trader tests/test_paper_trader.cpp)
 target_link_libraries(test_paper_trader PRIVATE lob_core Catch2::Catch2WithMain)
 add_test(NAME paper_trader COMMAND test_paper_trader)
 
+# Perf Metrics test
+add_executable(test_perf_metrics tests/test_perf_metrics.cpp)
+target_link_libraries(test_perf_metrics PRIVATE lob_core Catch2::Catch2WithMain)
+add_test(NAME perf_metrics COMMAND test_perf_metrics)
+
 include(CTest)
 include(Catch)
 

@@ -88,45 +88,35 @@ std::size_t OrderBook::size() const noexcept
 
 void OrderBook::insert_into_level(Order* order)
 {
-    if (order->side == Side::Buy) {
-        auto it = bids_.find(order->price);
-        
-        if (it == bids_.end()) {
-            PriceLevel level{};
-            level.price = order->price;
-            level.total_volume = order->remaining;
-            level.head = order;
-            level.tail = order;
-            
-            bids_.emplace(order->price, level);
-            std::cout << "Inserted Buy Order: " << order->id << " into bids_" << std::endl;
-        } else {
-            PriceLevel& level = it->second;
-            order->prev = level.tail;
-            level.tail->next = order;
-            level.tail = order;
-            level.total_volume += order->remaining;
-            std::cout << "Added Buy Order: " << order->id << " to existing price level" << std::endl;
-        }
+    auto& book_side = (order->side == Side::Buy) ? bids_ : asks_;
+    auto it = book_side.find(order->price);
+
+    if (it == book_side.end()) {
+        // Create new price level
+        PriceLevel level{};
+        level.price        = order->price;
+        level.total_volume = order->remaining;
+        level.head         = order;
+        level.tail         = order;
+
+        book_side.emplace(order->price, level);
     } else {
-        auto it = asks_.find(order->price);
+        PriceLevel& level = it->second;
 
-        if (it == asks_.end()) {
-            PriceLevel level{};
-            level.price = order->price;
-            level.total_volume = order->remaining;
+        if (!level.tail) {
+            // Level exists but empty — treat as new
             level.head = order;
             level.tail = order;
-
-            asks_.emplace(order->price, level);
-            std::cout << "Inserted Sell Order: " << order->id << " into asks_" << std::endl;
+            level.total_volume = order->remaining;
+            order->prev = nullptr;
+            order->next = nullptr;
         } else {
-            PriceLevel& level = it->second;
+            // Append to existing tail
             order->prev = level.tail;
             level.tail->next = order;
             level.tail = order;
             level.total_volume += order->remaining;
-            std::cout << "Added Sell Order: " << order->id << " to existing price level" << std::endl;
+            order->next = nullptr;
         }
     }
 }

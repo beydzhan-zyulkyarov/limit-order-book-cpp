@@ -9,6 +9,8 @@ MatchingEngine::MatchingEngine(std::size_t pool_size)
 
 std::vector<TradeEvent> MatchingEngine::match_limit_order(Order* incoming)
 {
+    auto start = std::chrono::high_resolution_clock::now();
+
     std::vector<TradeEvent> events;
 
     // Determine opposite book to match
@@ -32,6 +34,11 @@ std::vector<TradeEvent> MatchingEngine::match_limit_order(Order* incoming)
         while (resting && incoming->remaining > 0) {
             Quantity executed_qty = std::min(incoming->remaining, resting->remaining);
 
+            if (executed_qty == 0) {
+                // Prevent infinite loop
+                break;
+            }
+
             // Update quantities
             incoming->remaining -= executed_qty;
             resting->remaining -= executed_qty;
@@ -40,13 +47,14 @@ std::vector<TradeEvent> MatchingEngine::match_limit_order(Order* incoming)
             // Record trade
             events.push_back({resting->id, incoming->id, resting->price, executed_qty, incoming->ts});
 
-            // Remove fully filled resting order
             Order* next_resting = resting->next;
+
             if (resting->remaining == 0) {
-                book_.remove_from_level(resting);  // removes from price level
+                book_.remove_from_level(resting);        // remove from price level
                 book_.order_index().erase(resting->id); // remove from index
                 book_.pool().deallocate(resting);       // free memory
             }
+
             resting = next_resting;
         }
 
@@ -62,6 +70,10 @@ std::vector<TradeEvent> MatchingEngine::match_limit_order(Order* incoming)
         // Fully executed, deallocate
         book_.pool().deallocate(incoming);
     }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    double us = std::chrono::duration<double, std::micro>(end - start).count();
+    perf.record(us);
 
     return events;
 }
