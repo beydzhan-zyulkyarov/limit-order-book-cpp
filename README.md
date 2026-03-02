@@ -8,13 +8,19 @@ A limit order book (LOB) is a core data structure in financial markets. It maint
 
 ## Features
 
-✔ Price‑time priority matching — matches best price first, FIFO within price level
-✔ Supports market and limit orders
-✔ Supports order modification and cancellation
-✔ Minimal, header‑only API for easy embedding in other C++ projects
-✔ Designed for clarity with options to optimize further
-✔ Clean CMake build and test structure
-✔ Includes example usage and simple performance tests
+- Price‑time priority matching — matches best price first, FIFO within price level
+
+- Supports market and limit orders
+
+- Supports order modification and cancellation
+
+- Minimal, header‑only API for easy embedding in other C++ projects
+
+- Designed for clarity with options to optimize further
+
+- Clean CMake build and test structure
+
+- Includes example usage and simple performance tests
 
 ## Design & Architecture
 
@@ -26,60 +32,56 @@ Orders per price level: stored in a linked list or deque to maintain time priori
 
 Matching engine: walks the best bid/ask side to fill orders as they arrive
 
+
 This implementation focuses on:
 
-✔ O(log M) for new price levels where M is number of distinct prices.
-✔ O(1) for order insertions at existing price levels.
-✔ FIFO dispatch within price levels.
-✔ Clean API for common operations:
+- O(1) for order insertions at existing price levels.
 
-LOB book;
-book.add_limit(Order{...});
-book.cancel(order_id);
-book.modify(order_id, new_qty, new_price);
-book.match(); // attempt match
+- FIFO dispatch within price levels.
 
-(Example interface — adjust to your API)
+- Clean API for common operations:
 
 ## Installation & Build
 
 ### Requirements:
 
-✔ C++17 or later
-✔ CMake 3.16+
-✔ A modern C++ compiler (GCC/Clang/MSVC)
+- C++17 or later
+
+- CMake 3.16+
+
+- A modern C++ compiler (GCC/Clang/MSVC)
 
 ### Build:
 
+```bash
 git clone https://github.com/beydzhan-zyulkyarov/limit-order-book-cpp.git
 mkdir build && cd build
 cmake ..
 cmake --build . --parallel
-🧪 Testing
+```
+
+## Testing
 
 Unit tests validate correctness of order placement, matching, modification, cancellation, and edge cases.
 
 Run tests with:
 
+```bash
 cd build
 ctest --output-on-failure
+```
 
 or (if using Google Test directly):
 
+```bash
 ./orderbook_tests
-
-## Benchmarking
-
-Lightweight benchmarks are included under benchmarks/ to measure raw order book throughput and latency. These help you reason about trade rates in microseconds per order.
-
-(Add specific commands if present, e.g., ./bench_orderbook)
-
-Tip: For more realistic benchmarks, combine with synthetic or historical market ticks.
+```
 
 ## Example Usage
 
 Here is a simple snippet showing basic interactions:
 
+```cpp
 #include "order_book.hpp"
 #include "order_types.hpp"
 
@@ -102,8 +104,7 @@ int main() {
 
     return 0;
 }
-
-(Adapt to your actual API)
+```
 
 ## Goals & Use Cases
 
@@ -122,18 +123,21 @@ Contributions welcome — improve matching logic, add more order types, integrat
 
 Please follow standard conventions:
 
-✔ Add tests
-✔ Document API changes
-✔ Benchmark performance after significant modifications
+- Add tests
+- Document API changes
+- Benchmark performance after significant modifications
 
 ## What’s Next?
 
 For future enhancements:
 
-⭐ Add stop / stop‑limit / iceberg order support
-⭐ More realistic ordered event replay benchmarking
-⭐ Multi‑threaded ingestion pipeline
-⭐ Integration with real market data feeds
+- Add stop / stop‑limit / iceberg order support
+
+- More realistic ordered event replay benchmarking
+
+- Multi‑threaded ingestion pipeline
+
+- Integration with real market data feeds
 
 ## License
 
